@@ -1,16 +1,6 @@
 import { Link } from "react-router-dom";
-import { Animal } from "./APIResponsesTypes";
 
-interface IProps {
-  name: string;
-  animal: Animal;
-  breed: string;
-  images: string[];
-  location: string;
-  id: number;
-}
-
-const Pet = (props: IProps) => {
+const Pet = (props) => {
   const { name, animal, breed, images, location, id } = props;
 
   let hero = "http://pets-images.dev-apis.com/pets/none.jpg";

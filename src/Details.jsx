@@ -9,16 +9,10 @@ import Carousel from "./Carousel";
 
 const Details = () => {
   const { id } = useParams();
-
-  if (!id)
-    throw new Error(
-      "Why did you not give me an id?, I wanted an id. I have no id."
-    );
-
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const results = useQuery(["details", id], fetchPet);
-
+  // eslint-disable-next-line no-unused-vars
   const [_, setAdoptedPet] = useContext(AdoptedPetContext);
 
   if (results.isLoading) {
@@ -29,8 +23,7 @@ const Details = () => {
     );
   }
 
-  const pet = results?.data?.pets[0];
-  if (!pet) throw new Error("No pet found");
+  const pet = results.data.pets[0];
 
   return (
     <div className="details">
@@ -63,10 +56,10 @@ const Details = () => {
   );
 };
 
-export default function DetailsErrorBoundary() {
+export default function DetailsErrorBoundary(props) {
   return (
     <ErrorBoundary>
-      <Details />
+      <Details {...props} />
     </ErrorBoundary>
   );
 }
