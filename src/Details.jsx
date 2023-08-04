@@ -1,32 +1,29 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { useContext, useState } from "react";
-import AdoptedPetContext from "./AdoptedPetContext";
-import Modal from "./Modal";
-import ErrorBoundary from "./ErrorBoundary";
-import fetchPet from "./fetchPet";
-import Carousel from "./Carousel";
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { adopt } from './adoptedPetSlice';
+import { useState } from 'react';
+import Modal from './Modal';
+import ErrorBoundary from './ErrorBoundary';
+import Carousel from './Carousel';
+import { useGetPetQuery } from './petApiService';
 
 const Details = () => {
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const results = useQuery(["details", id], fetchPet);
-  // eslint-disable-next-line no-unused-vars
-  const [_, setAdoptedPet] = useContext(AdoptedPetContext);
+  const { isLoading, data: pet } = useGetPetQuery(id);
+  const dispatch = useDispatch();
 
-  if (results.isLoading) {
+  if (isLoading) {
     return (
-      <div className="loading-pane">
-        <h2 className="loader">🌀</h2>
+      <div className='loading-pane'>
+        <h2 className='loader'>🌀</h2>
       </div>
     );
   }
 
-  const pet = results.data.pets[0];
-
   return (
-    <div className="details">
+    <div className='details'>
       <Carousel images={pet.images} />
       <div>
         <h1>{pet.name}</h1>
@@ -37,13 +34,12 @@ const Details = () => {
           <Modal>
             <div>
               <h1>Would you like to adopt {pet.name}?</h1>
-              <div className="buttons">
+              <div className='buttons'>
                 <button
                   onClick={() => {
-                    setAdoptedPet(pet);
-                    navigate("/");
-                  }}
-                >
+                    dispatch(adopt(pet));
+                    navigate('/');
+                  }}>
                   Yes
                 </button>
                 <button onClick={() => setShowModal(false)}>No</button>
